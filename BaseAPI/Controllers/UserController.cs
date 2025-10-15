@@ -1,6 +1,7 @@
 ﻿using Application.Service.Implementations;
 using Application.Service.Interfaces;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,6 +30,7 @@ namespace BaseAPI.Controllers
             return Ok(_userService.GetById(id));
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult Create(User user)
         {

@@ -1,5 +1,6 @@
 ﻿using Application.Service.Interfaces;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,6 +28,7 @@ namespace BaseAPI.Controllers
             return Ok(_productService.GetById(id));
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult Create(Product product)
         {
