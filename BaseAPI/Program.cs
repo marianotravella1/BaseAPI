@@ -24,6 +24,14 @@ builder.Services.AddSwaggerGen(setupAction =>
         Description = "Insert JWT, generated after being logged."
     });
 
+    builder.Services.AddHttpClient(
+        "pokeHttpClient",
+        client =>
+        {
+            client.BaseAddress = new Uri("https://pokeapi.co/api/v2/");
+        });
+
+
     setupAction.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
