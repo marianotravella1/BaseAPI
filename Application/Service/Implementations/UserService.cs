@@ -1,5 +1,6 @@
 ﻿using Application.Repository;
 using Application.Service.Interfaces;
+using Application.Service.Models;
 using Domain.Entities;
 
 namespace Application.Service.Implementations
@@ -29,6 +30,11 @@ namespace Application.Service.Implementations
         public User? GetById(int id)
         {
             return _repository.GetById(id);
+        }
+
+        public User? AuthUser(CredentialsDto credDto)
+        {
+            return _repository.AuthUser(credDto.UserName, credDto.Password);
         }
     }
 }
