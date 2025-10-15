@@ -41,4 +41,11 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<BaseAPIContext>();
+    db.Database.Migrate(); // crea/actualiza tablas al arrancar
+}
+
+
 app.Run();
