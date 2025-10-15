@@ -24,12 +24,12 @@ builder.Services.AddDbContext<BaseAPIContext>(options => options.UseSqlServer(
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// Swagger también en Azure
+app.UseSwagger();
+app.UseSwaggerUI();
+
+// redirigí la raíz al swagger
+app.MapGet("/", () => Results.Redirect("/swagger"));
 
 app.UseHttpsRedirection();
 
