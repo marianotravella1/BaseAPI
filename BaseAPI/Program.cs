@@ -45,19 +45,6 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddDbContext<BaseAPIContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")));
 
-var app = builder.Build();
-
-// Swagger también en Azure
-app.UseSwagger();
-app.UseSwaggerUI();
-
-// redirigí la raíz al swagger
-app.MapGet("/", () => Results.Redirect("/swagger"));
-
-app.UseHttpsRedirection();
-
-app.UseCors(cors => cors.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
-
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(options =>
     {
@@ -72,6 +59,21 @@ builder.Services.AddAuthentication("Bearer")
         };
     }
 );
+
+var app = builder.Build();
+
+// Swagger también en Azure
+app.UseSwagger();
+app.UseSwaggerUI();
+
+// redirigí la raíz al swagger
+app.MapGet("/", () => Results.Redirect("/swagger"));
+
+app.UseHttpsRedirection();
+
+app.UseCors(cors => cors.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+
+
 
 app.UseAuthorization();
 
