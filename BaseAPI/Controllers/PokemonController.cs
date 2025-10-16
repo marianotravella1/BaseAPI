@@ -14,10 +14,10 @@ namespace BaseAPI.Controllers
             _pokemonAPIService = pokemonAPIService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> getBerry()
+        [HttpGet("{id}")]
+        public async Task<IActionResult> getBerry([FromRoute]int id)
         {
-            return Ok(await _pokemonAPIService.GetBerryAsync(1));
+            return Ok(await _pokemonAPIService.GetBerryAsync(id));
         }
 
         [HttpPost]

@@ -3,6 +3,7 @@ using Application.Service.Implementations;
 using Application.Service.Interfaces;
 using Infrastructure;
 using Infrastructure.Repository;
+using Infrastructure.Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -10,17 +11,33 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+# region HTPPCLientFactories
+
+ApiClientConfiguration pokeApiResilienceConfiguration = new()
+{
+    RetryCount = 2,
+    RetryAttemptInSeconds = 3,
+    DurationOfBreakInSeconds = 120,
+    HandledEventsAllowedBeforeBreaking = 10
+};
+
+builder.Services.AddHttpClient(
+    "pokeHttpClient",
+    client =>
+    {
+        client.BaseAddress = new Uri("https://pokeapi.co/api/v2/");
+    })
+    //.AddPolicyHandler(PollyResiliencePolicies.GetRetryPolicy(pokeApiResilienceConfiguration))
+    //.AddPolicyHandler(PollyResiliencePolicies.GetCircuitBreakerPolicy(pokeApiResilienceConfiguration))
+    ;
+
+#endregion
 // Add services to the container.
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddHttpClient(
-        "pokeHttpClient",
-        client =>
-        {
-            client.BaseAddress = new Uri("https://pokeapi.co/api/v2/");
-        });
+
 builder.Services.AddSwaggerGen(setupAction =>
 {
     setupAction.AddSecurityDefinition("BaseAPIBearerAuth", new OpenApiSecurityScheme()
@@ -50,6 +67,7 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddSingleton<PokemonAPIService>();
 
 builder.Services.AddDbContext<BaseAPIContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")));
